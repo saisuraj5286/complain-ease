@@ -17,7 +17,7 @@ export default async function Home() {
           zIndex: -1, // Ensure it stays in the background
         }}
       ></div>
-      <div className="flex justify-between bg-[#687381]  items-center px-3 py-1 shadow-2xl rounded-3xl w-full mb-4">
+      <div className="flex justify-between bg-[#eaecf0]  items-center px-3 py-1 shadow-2xl rounded-3xl w-full mb-4">
         <div>
           <Image src="/logo.png" alt="Complain Ease Logo" width={200} height={200} />
         </div>

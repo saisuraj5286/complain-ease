@@ -1,26 +1,53 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
-import { index, pgTableCreator } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, pgEnum } from "drizzle-orm/pg-core";
 
 /**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `complain_ease_${name}`);
 
-export const posts = createTable(
-  "post",
+export const complaintCategory = pgEnum("complaint_category", [
+  "on_campus",
+  "hostel",
+  "transport",
+  "ragging",
+  "other",
+]);
+
+export const complaintPriority = pgEnum("complaint_priority", [
+  "low",
+  "medium",
+  "high",
+  "urgent",
+]);
+
+export const complaintStatus = pgEnum("complaint_status", [
+  "pending",
+  "in_progress",
+  "resolved",
+  "rejected",
+]);
+
+export const complaints = createTable(
+  "complaint",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdAt: d
+    title: d.varchar({ length: 256 }).notNull(),
+    description: d.text().notNull(),
+    category: complaintCategory().notNull(),
+    priority: complaintPriority().default("medium").notNull(),
+    status: complaintStatus().default("pending").notNull(),
+    mediaUrl: d.varchar({ length: 1024 }),
+    filedBy: d.varchar({ length: 256 }).notNull(),
+    filedAt: d
       .timestamp({ withTimezone: true })
-      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .$defaultFn(() => new Date())
       .notNull(),
+    resolvedAt: d.timestamp({ withTimezone: true }),
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
-  (t) => [index("name_idx").on(t.name)],
+  (t) => [
+    index("category_idx").on(t.category),
+    index("status_idx").on(t.status),
+    index("filed_by_idx").on(t.filedBy),
+  ],
 );
