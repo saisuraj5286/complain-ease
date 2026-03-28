@@ -43,7 +43,6 @@ const Page = () => {
         </button>
       </div>
       <div className="flex flex-col items-start py-2">
-        <h2>Welcome to your Dashboard</h2>
       </div>
       <div className="flex flex-row items-center justify-between gap-3 mb-4 p-2">
         <div className="flex flex-row items-center gap-3">

@@ -3,19 +3,19 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="mx-auto p-4 min-h-screen ">
+    <div className="mx-auto p-4 min-h-screen flex flex-col justify-between items-center">
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10"
         style={{
           backgroundImage: "url('/bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          opacity: 0.2, // 30% transparent
-          zIndex: -1, // Ensure it stays in the background
         }}
-      ></div>
+      >
+        <div className="absolute inset-0 bg-black/70"></div>
+      </div>
 
-      <div className="mb-4 flex w-full items-center justify-between rounded-3xl bg-[#687381] px-3 py-1 shadow-2xl">
+      <div className="flex justify-between bg-[#eaecf0]  items-center px-3 py-1 shadow-2xl rounded-3xl w-full mb-4">
         <div>
           <Image
             src="/logo.png"
@@ -30,15 +30,15 @@ const page = () => {
       </div>
       <div className=" w-full h-full rounded-3xl p-6 shadow-2xl flex flex-row items-center justify-center gap-10 ">
         <div className="max-w-[48%] ">
-            <h4 className="mb-2 text-3xl font-bold text-black">
+            <h4 className="mb-2 text-3xl font-bold text-white">
                 Simplify. Track. Resolve.   
             </h4>
-            <p className="text-lg font-medium text-[#28332c]">
+            <p className="text-lg font-medium text-[#d4d4d4]">
                 ComplainEase helps colleges and organizations manage student complaints efficiently with role-based dashboards, real-time tracking, and transparent communication.
             </p>
         </div>
         
-        <div className="max-w-[48%] w-full bg-white p-6 rounded-3xl shadow-lg flex flex-col gap-4"> 
+        <div className="max-w-[48%] w-full bg-gray-200 p-6 rounded-3xl shadow-lg flex flex-col gap-4"> 
             <div>
                 <div className="flex flex-col items-center justify-center text-xl gap-4 ">
                 <h4 className="text-2xl font-bold">Enter your credentials</h4>
@@ -75,10 +75,6 @@ const page = () => {
                 </div>
                 </div>
             </div>
-
-             
-            
-           
         </div>
         
       </div>
