@@ -12,7 +12,7 @@ const AddComplaintModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   const createComplaint = api.complaint.create.useMutation({
     onSuccess: () => {
-      void utils.complaint.getAll.invalidate();
+      void utils.complaint.getMine.invalidate();
       setTitle("");
       setDescription("");
       setCategory("on_campus");
@@ -36,7 +36,6 @@ const AddComplaintModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       description,
       category,
       priority,
-      filedBy: "123456",
     });
   };
 
