@@ -1,29 +1,103 @@
-# Create T3 App
+# ComplainEase
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A college complaint-management app. **Students** file complaints (ragging, hostel, transport,
+on-campus, other) and **admins** track and resolve them. Built on the
+[T3 Stack](https://create.t3.gg/).
 
-## What's next? How do I make an app with this?
+## Tech stack
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Next.js 15** (App Router, React 19)
+- **tRPC v11** + **TanStack React Query** for the type-safe API
+- **Drizzle ORM** + **PostgreSQL**
+- **Lucia** authentication (session cookies, Argon2 password hashing)
+- **Tailwind CSS v4**
+- **pnpm** package manager
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Features
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- Username / roll-number / password signup and login
+- Role-based access: `student` and `admin`
+  - Students: file complaints, see only their own, track status
+  - Admins: see all complaints, filter/search, change status (resolve / progress / reject), delete
+- Server-side route protection via group layouts, plus `protectedProcedure` / `adminProcedure`
+  authorization on the tRPC API
 
-## Learn More
+## Local setup
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+1. **Install dependencies**
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+   ```bash
+   pnpm install
+   ```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+2. **Configure environment**
 
-## How do I deploy this?
+   Copy `.env.example` to `.env` and set `DATABASE_URL` to your Postgres connection string
+   (Supabase, Neon, local Docker, etc.). A local Postgres can be started with
+   `./start-database.sh`.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+   ```
+   DATABASE_URL="postgresql://user:password@host:5432/postgres"
+   ```
+
+3. **Apply the database schema**
+
+   ```bash
+   pnpm db:migrate   # apply committed migrations
+   # or, for local iteration:
+   pnpm db:push
+   ```
+
+4. **Run the dev server**
+
+   ```bash
+   pnpm dev
+   ```
+
+## Creating an admin
+
+Signup always creates a `student`. To promote a user to `admin`, either use Drizzle Studio
+(`pnpm db:studio`) and flip the `role` column, or run SQL against your database:
+
+```sql
+UPDATE "user" SET role = 'admin' WHERE username = 'your_username';
+```
+
+Log out and back in so the new role takes effect, and you'll be routed to `/admin`.
+
+## Scripts
+
+| Command             | Description                              |
+| ------------------- | ---------------------------------------- |
+| `pnpm dev`          | Start the dev server (Turbopack)         |
+| `pnpm build`        | Production build                         |
+| `pnpm lint`         | ESLint                                   |
+| `pnpm typecheck`    | `tsc --noEmit`                           |
+| `pnpm check`        | Lint + typecheck                         |
+| `pnpm db:generate`  | Generate a Drizzle migration from schema |
+| `pnpm db:migrate`   | Apply migrations                         |
+| `pnpm db:push`      | Push schema directly (dev)               |
+| `pnpm db:studio`    | Open Drizzle Studio                      |
+
+## CI/CD
+
+GitHub Actions workflows live in `.github/workflows/`:
+
+- **`ci.yml`** — runs on every push and pull request: installs deps, then `lint`, `typecheck`,
+  and `build`. The build runs with `SKIP_ENV_VALIDATION=1` and a dummy `DATABASE_URL`, so no live
+  database or secrets are needed just to compile.
+- **`deploy.yml`** — runs on pushes to `main` and deploys the production build to Vercel.
+
+### Vercel deployment setup
+
+The deploy workflow needs these **repository secrets**
+(Settings → Secrets and variables → Actions):
+
+| Secret              | Where to get it                                                  |
+| ------------------- | ---------------------------------------------------------------- |
+| `VERCEL_TOKEN`      | Vercel account → Settings → Tokens                               |
+| `VERCEL_ORG_ID`     | `.vercel/project.json` after `vercel link`, or project settings  |
+| `VERCEL_PROJECT_ID` | `.vercel/project.json` after `vercel link`, or project settings  |
+
+Also set `DATABASE_URL` (and any other env vars) in the **Vercel project's Environment Variables**
+so the deployed app can reach the database.
