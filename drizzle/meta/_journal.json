@@ -8,6 +8,20 @@
       "when": 1771582448487,
       "tag": "0000_powerful_rafael_vega",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774871513975,
+      "tag": "0001_fat_william_stryker",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784747705213,
+      "tag": "0002_chief_maestro",
+      "breakpoints": true
     }
   ]
 }

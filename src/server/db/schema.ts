@@ -1,4 +1,4 @@
-import { index, pgTableCreator, pgEnum } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, pgEnum, text, pgTable } from "drizzle-orm/pg-core";
 
 /**
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
@@ -27,6 +27,8 @@ export const complaintStatus = pgEnum("complaint_status", [
   "rejected",
 ]);
 
+export const userRole = pgEnum("user_role", ["student", "admin"]);
+
 export const complaints = createTable(
   "complaint",
   (d) => ({
@@ -50,4 +52,22 @@ export const complaints = createTable(
     index("status_idx").on(t.status),
     index("filed_by_idx").on(t.filedBy),
   ],
+);
+
+export const users = pgTable("user", {
+	id: text("id").primaryKey(),
+	username: text("username").notNull().unique(),
+	roll_no: text("roll_no").notNull().unique(),
+	password_hash: text("password_hash").notNull(),
+	role: userRole("role").default("student").notNull(),
+});
+
+// Sessions table - for Lucia auth
+export const sessions = createTable(
+  "session",
+  (d) => ({
+    id: d.text().primaryKey(),
+    userId: d.text().notNull().references(() => users.id, { onDelete: "cascade" }),
+    expiresAt: d.timestamp({ withTimezone: true, mode: "date" }).notNull(),
+  }),
 );
