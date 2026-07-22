@@ -2,9 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 
-export default async function Home() {
-  
-
+export default function Home() {
   return (
     <div className="mx-auto p-4 min-h-screen flex flex-col justify-between items-center">
       <div
@@ -21,8 +19,19 @@ export default async function Home() {
         <div>
           <Image src="/logo.png" alt="Complain Ease Logo" width={200} height={200} />
         </div>
-        <div className="border border-gray-400 px-4 py-2 rounded-3xl cursor-pointer hover:shadow-2xl bg-white">
-          login 
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="cursor-pointer rounded-3xl border border-gray-400 bg-white px-4 py-2 hover:shadow-2xl"
+          >
+            Login
+          </Link>
+          <Link
+            href="/signup"
+            className="cursor-pointer rounded-3xl border border-gray-400 bg-blue-500 px-4 py-2 text-white hover:shadow-2xl"
+          >
+            Sign Up
+          </Link>
         </div>
 
       </div>
