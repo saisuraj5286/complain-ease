@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { api } from "~/trpc/react";
 import LogoutButton from "~/app/_components/LogoutButton";
+import NotificationBell from "~/app/_components/NotificationBell";
+import { safeHttpUrl } from "~/lib/url";
 
 type Status = "pending" | "in_progress" | "resolved" | "rejected";
 type Category = "all" | "on_campus" | "hostel" | "transport" | "ragging" | "other";
@@ -64,9 +67,17 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen p-3">
       <div className="flex items-center justify-between rounded-3xl bg-[#f1c6c6] p-3 text-2xl font-bold text-blue-500">
-        <Image src="/logo.png" alt="Complain Ease Logo" width={200} height={200} />
+        <Image
+          src="/logo.png"
+          alt="Complain Ease Logo"
+          width={423}
+          height={123}
+          priority
+          className="h-auto w-[180px]"
+        />
         <div className="flex items-center gap-4">
           <span className="text-lg text-gray-700">Admin Dashboard</span>
+          <NotificationBell />
           <LogoutButton />
         </div>
       </div>
@@ -146,14 +157,28 @@ const AdminDashboard = () => {
             ) : filtered && filtered.length > 0 ? (
               filtered.map((c) => (
                 <tr key={c.id}>
-                  <td className="border border-gray-300 px-4 py-2">{c.id}</td>
-                  <td className="border border-gray-300 px-4 py-2">{c.title}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <Link
+                      href={`/complaints/${c.id}`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {c.id}
+                    </Link>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <Link
+                      href={`/complaints/${c.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {c.title}
+                    </Link>
+                  </td>
                   <td className="border border-gray-300 px-4 py-2">{c.description}</td>
                   <td className="border border-gray-300 px-4 py-2 capitalize">{c.category}</td>
                   <td className="border border-gray-300 px-4 py-2 capitalize">{c.priority}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {c.mediaUrl ? (
-                      <a href={c.mediaUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                    {safeHttpUrl(c.mediaUrl) ? (
+                      <a href={safeHttpUrl(c.mediaUrl)!} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                         View
                       </a>
                     ) : (

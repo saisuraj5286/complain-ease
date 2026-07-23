@@ -2,10 +2,13 @@
 
 import { User } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 import AddComplaintModal from "./AddcomplaintModal";
 import Image from "next/image";
 import { api } from "~/trpc/react";
 import LogoutButton from "~/app/_components/LogoutButton";
+import NotificationBell from "~/app/_components/NotificationBell";
+import { safeHttpUrl } from "~/lib/url";
 
 const statusStyles: Record<string, string> = {
   pending: "text-yellow-600",
@@ -15,10 +18,10 @@ const statusStyles: Record<string, string> = {
 };
 
 const DashboardClient = ({
-  username,
+  email,
   rollNo,
 }: {
-  username: string;
+  email: string;
   rollNo: string;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,8 +50,18 @@ const DashboardClient = ({
   return (
     <div className="min-h-screen p-3">
       <div className="flex items-center justify-between rounded-3xl bg-[#f1c6c6] p-3 text-2xl font-bold text-blue-500">
-        <Image src="/logo.png" alt="Complain Ease Logo" width={200} height={200} />
-        <LogoutButton />
+        <Image
+          src="/logo.png"
+          alt="Complain Ease Logo"
+          width={423}
+          height={123}
+          priority
+          className="h-auto w-[180px]"
+        />
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
       <div className="flex flex-col items-start py-2"></div>
       <div className="mb-4 flex flex-row items-center justify-between gap-3 p-2">
@@ -57,7 +70,7 @@ const DashboardClient = ({
             <User size={100} />
           </div>
           <div>
-            <h4 className="text-lg font-medium capitalize">{username}</h4>
+            <h4 className="text-lg font-medium">{email}</h4>
             <p>roll no: {rollNo}</p>
           </div>
         </div>
@@ -116,14 +129,28 @@ const DashboardClient = ({
               ) : filteredComplaints && filteredComplaints.length > 0 ? (
                 filteredComplaints.map((complaint) => (
                   <tr key={complaint.id}>
-                    <td className="border border-gray-300 px-4 py-2">{complaint.id}</td>
-                    <td className="border border-gray-300 px-4 py-2">{complaint.title}</td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <Link
+                        href={`/complaints/${complaint.id}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {complaint.id}
+                      </Link>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <Link
+                        href={`/complaints/${complaint.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {complaint.title}
+                      </Link>
+                    </td>
                     <td className="border border-gray-300 px-4 py-2">{complaint.description}</td>
                     <td className="border border-gray-300 px-4 py-2 capitalize">{complaint.category}</td>
                     <td className="border border-gray-300 px-4 py-2 capitalize">{complaint.priority}</td>
                     <td className="border border-gray-300 px-4 py-2">
-                      {complaint.mediaUrl ? (
-                        <a href={complaint.mediaUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                      {safeHttpUrl(complaint.mediaUrl) ? (
+                        <a href={safeHttpUrl(complaint.mediaUrl)!} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                           View
                         </a>
                       ) : (

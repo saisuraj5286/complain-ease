@@ -16,14 +16,15 @@ export async function login(
 	_: ActionResult,
 	formData: FormData,
 ): Promise<ActionResult> {
-	const username = formData.get("username");
+	const emailInput = formData.get("email");
+	const email =
+		typeof emailInput === "string" ? emailInput.trim().toLowerCase() : "";
 	if (
-		typeof username !== "string" ||
-		username.length < 3 ||
-		username.length > 31 ||
-		!/^[a-z0-9_-]+$/.test(username)
+		email.length < 3 ||
+		email.length > 255 ||
+		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 	) {
-		return { error: "Incorrect username or password" };
+		return { error: "Incorrect email or password" };
 	}
 
 	const password = formData.get("password");
@@ -32,15 +33,15 @@ export async function login(
 		password.length < 6 ||
 		password.length > 255
 	) {
-		return { error: "Incorrect username or password" };
+		return { error: "Incorrect email or password" };
 	}
 
 	const existingUser = await db.query.users.findFirst({
-		where: eq(users.username, username),
+		where: eq(users.email, email),
 	});
 
 	// Always run verify (even with a dummy hash) so response timing doesn't
-	// reveal whether the username exists.
+	// reveal whether the email exists.
 	const validPassword = existingUser
 		? await verify(existingUser.password_hash, password, {
 				memoryCost: 19456,
@@ -51,7 +52,7 @@ export async function login(
 		: false;
 
 	if (!existingUser || !validPassword) {
-		return { error: "Incorrect username or password" };
+		return { error: "Incorrect email or password" };
 	}
 
 	const session = await lucia.createSession(existingUser.id, {});

@@ -8,7 +8,7 @@ export default function Home() {
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: "url('/bg.png')",
+          backgroundImage: "url('/bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -17,7 +17,14 @@ export default function Home() {
       </div>
       <div className="flex justify-between bg-[#eaecf0]  items-center px-3 py-1 shadow-2xl rounded-3xl w-full mb-4">
         <div>
-          <Image src="/logo.png" alt="Complain Ease Logo" width={200} height={200} />
+          <Image
+            src="/logo.png"
+            alt="Complain Ease Logo"
+            width={423}
+            height={123}
+            priority
+            className="h-auto w-[180px]"
+          />
         </div>
         <div className="flex items-center gap-3">
           <Link

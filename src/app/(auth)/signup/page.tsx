@@ -13,7 +13,7 @@ export default function Page() {
 			<div
 				className="absolute inset-0 -z-10"
 				style={{
-					backgroundImage: "url('/bg.png')",
+					backgroundImage: "url('/bg.webp')",
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 				}}
@@ -26,8 +26,10 @@ export default function Page() {
 					<Image
 						src="/logo.png"
 						alt="Complain Ease Logo"
-						width={200}
-						height={200}
+						width={423}
+						height={123}
+						priority
+						className="h-auto w-[180px]"
 					/>
 				</div>
 				<Link
@@ -56,10 +58,11 @@ export default function Page() {
 							<h4 className="text-2xl font-bold">Create an account</h4>
 							<div className="w-full">
 								<input
-									type="text"
-									name="username"
-									id="username"
-									placeholder="Enter Username"
+									type="email"
+									name="email"
+									id="email"
+									placeholder="Enter Email"
+									autoComplete="email"
 									className="mb-2 w-full rounded-2xl border border-gray-500 px-3 py-2"
 								/>
 							</div>

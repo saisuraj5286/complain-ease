@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <DashboardClient
-      username={user.username}
+      email={user.email}
       rollNo={user.roll_no}
     />
   );

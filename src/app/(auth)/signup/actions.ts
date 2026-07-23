@@ -16,16 +16,16 @@ export async function signup(
 	_: ActionResult,
 	formData: FormData,
 ): Promise<ActionResult> {
-	const username = formData.get("username");
-	// username must be between 3 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
+	const emailInput = formData.get("email");
+	const email =
+		typeof emailInput === "string" ? emailInput.trim().toLowerCase() : "";
 	if (
-		typeof username !== "string" ||
-		username.length < 3 ||
-		username.length > 31 ||
-		!/^[a-z0-9_-]+$/.test(username)
+		email.length < 3 ||
+		email.length > 255 ||
+		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 	) {
 		return {
-			error: "Invalid username (3-31 characters, lowercase letters, numbers, - and _ only)",
+			error: "Please enter a valid email address",
 		};
 	}
 
@@ -62,14 +62,14 @@ export async function signup(
 	try {
 		await db.insert(users).values({
 			id: userId,
-			username: username,
+			email: email,
 			roll_no: rollNo,
 			password_hash: passwordHash,
 			role: "student",
 		});
 	} catch {
 		return {
-			error: "Username or roll number is already taken",
+			error: "Email or roll number is already taken",
 		};
 	}
 

@@ -1,4 +1,6 @@
 import { complaintRouter } from "~/server/api/routers/complaint";
+import { commentRouter } from "~/server/api/routers/comment";
+import { notificationRouter } from "~/server/api/routers/notification";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +10,8 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   complaint: complaintRouter,
+  comment: commentRouter,
+  notification: notificationRouter,
 });
 
 // export type definition of API
